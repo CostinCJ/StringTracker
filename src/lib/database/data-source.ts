@@ -9,7 +9,7 @@ export const AppDataSource = new DataSource({
     host: process.env.POSTGRES_HOST || "localhost",
     port: parseInt(process.env.POSTGRES_PORT || "5432"),
     username: process.env.POSTGRES_USER || "postgres",
-    password: process.env.POSTGRES_PASSWORD || "1234",
+    password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_DB || "guitars_db",
     synchronize: false,
     logging: true,

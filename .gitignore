@@ -40,3 +40,6 @@ jspm_packages
 data/guitars.json
 # Local environment variables
 .env.local
+# Local database and environment
+data/*.sqlite
+.env

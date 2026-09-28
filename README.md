@@ -16,7 +16,7 @@ A full-stack **Next.js + TypeScript** web app for guitar players and small shops
 Next.js (App Router, React 19)
  ├─ UI pages ─────────────── protected by NextAuth session
  ├─ /api/guitars, /api/auth ─ route handlers
- └─ services ──── TypeORM ──── PostgreSQL (SQLite for local dev)
+ └─ services ──── TypeORM ──── PostgreSQL
 ```
 
 - **Data layer:** TypeORM entities with versioned migrations (`npm run migration:*`)
@@ -39,6 +39,8 @@ Next.js (App Router, React 19)
 git clone https://github.com/CostinCJ/StringTracker.git
 cd StringTracker
 npm install
+cp .env.example .env.local   # set your PostgreSQL credentials
+set -a; . ./.env.local; set +a   # load them for the migration CLI
 npm run migration:run
 npm run dev
 ```
@@ -48,6 +50,7 @@ Open [http://localhost:3000](http://localhost:3000).
 ### Run with Docker (app + PostgreSQL)
 
 ```bash
+cp .env.example .env          # set POSTGRES_PASSWORD
 docker compose up --build
 ```
 
