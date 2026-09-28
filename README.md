@@ -1,41 +1,57 @@
-# StringTracker — Guitar Inventory System
+# StringTracker: Guitar Inventory System
 
-A **Next.js + TypeScript** web application for guitar players and small shops to manage their guitar inventory. Track, add, update, and delete guitars, filter across multiple attributes, and view price analytics — all in a clean, responsive UI.
+A full-stack **Next.js + TypeScript** web app for guitar players and small shops to manage their guitar inventory. Each user gets a private collection they can browse, filter, edit and analyse. The app is containerised and was deployed to **AWS ECS** over HTTPS.
 
 ## Features
 
-- **Browse inventory** — view all guitars with filtering by manufacturer, type, condition, strings, and price
-- **Full CRUD** — add, update, and delete guitars with detailed information
-- **Price analytics** — price statistics and category highlights across the collection
-- **Responsive UI** — built with React and modern Next.js
+- **Accounts.** Register and sign in with NextAuth (JWT sessions, bcrypt-hashed passwords). Every page except the landing page is protected, and each user only ever sees their own guitars.
+- **Full CRUD.** Add, update and delete guitars with detailed attributes, validated server-side with `class-validator`.
+- **Filtering.** By manufacturer, type, condition, string count and price.
+- **Price analytics.** Statistics and category highlights across the collection, answering what it's *worth*, not just what's in it.
+- **REST API.** Next.js route handlers under `/api/guitars` and `/api/auth`, backed by a service layer (`GuitarService`, `BrandService`).
+
+## Architecture
+
+```
+Next.js (App Router, React 19)
+ ├─ UI pages ─────────────── protected by NextAuth session
+ ├─ /api/guitars, /api/auth ─ route handlers
+ └─ services ──── TypeORM ──── PostgreSQL (SQLite for local dev)
+```
+
+- **Data layer:** TypeORM entities with versioned migrations (`npm run migration:*`)
+- **Deployment:** multi-stage Dockerfile running as a non-root user, `docker-compose` with PostgreSQL for local production-like runs, and a `deploy.sh` script that pushes the image to Amazon ECR and rolls out the ECS service
+- **Tests:** Jest + React Testing Library
 
 ## Tech stack
 
-`Next.js` · `React` · `TypeScript` · `Node.js`
+`Next.js 15` `React 19` `TypeScript` `NextAuth` `TypeORM` `PostgreSQL` `Tailwind CSS` `Jest` `Docker` `AWS ECS / ECR`
 
 ## Getting started
 
 ### Prerequisites
-- Node.js 18.17.0 or later
-- npm or yarn
+- Node.js 18.17 or later
+- Docker (optional, for the PostgreSQL setup)
 
-### Installation
+### Run locally
 
 ```bash
-git clone https://github.com/CostinCJ/MPP_Lab1.git
-cd MPP_Lab1
+git clone https://github.com/CostinCJ/StringTracker.git
+cd StringTracker
 npm install
-```
-
-### Run the app
-
-```bash
+npm run migration:run
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000).
 
-### Run tests
+### Run with Docker (app + PostgreSQL)
+
+```bash
+docker compose up --build
+```
+
+### Tests
 
 ```bash
 npm test
